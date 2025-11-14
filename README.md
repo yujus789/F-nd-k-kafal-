@@ -1,2 +1,187 @@
 # F-nd-k-kafal-
 ..
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Önemli Bir Soru 🥺</title>
+    <style>
+        /* CSS Kodları */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f0f0; /* Açık gri arka plan */
+            transition: background-color 0.5s;
+            overflow: hidden; /* Buton kaçarken kaydırma çubuğu çıkmasını engeller */
+        }
+
+        #container {
+            text-align: center;
+            padding: 40px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        #question {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            min-width: 80px; /* Butonların çok küçülmesini engeller */
+        }
+
+        #no-button {
+            background-color: #ff6b6b; /* Kırmızımsı */
+            color: white;
+            position: relative; /* JavaScript ile hareket ettirilecek */
+            z-index: 5; 
+        }
+
+        #no-button:hover {
+            box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+        }
+
+        #yes-button {
+            background-color: #4CAF50; /* Yeşil */
+            color: white;
+            width: 90px; 
+            height: 45px;
+            font-size: 18px;
+            position: relative;
+            z-index: 10; /* Her zaman üstte olsun */
+        }
+        
+        #yes-button:hover {
+            opacity: 0.9;
+        }
+
+        /* Başarılı mesajı için animasyon */
+        @keyframes scaleIn {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .success-message {
+            animation: scaleIn 0.8s ease-out;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="container">
+        <h1 id="question">Benimle barışır mısın? ❤️</h1>
+        <div class="buttons">
+            <button id="no-button" onclick="handleNoClick()">Hayır</button>
+            <button id="yes-button" onclick="handleYesClick()">Evet</button>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript Kodları
+        const noMessages = [
+            "Emin misin? 😥",
+            "Sanki yanlış bastın gibi 🤔",
+            "Bir daha düşün bence 💔",
+            "Gerçekten mi? 😢",
+            "Bu son şansın! 🥺",
+            "Lütfen Hayır'ı seçme... 🙏",
+            "Ama ben seni çok seviyorum! 😭",
+            "Bu sefer 'Evet'e basmalısın! ✨"
+        ];
+
+        let noClickCount = 0; 
+        const noButton = document.getElementById('no-button');
+        const yesButton = document.getElementById('yes-button');
+        const container = document.getElementById('container');
+        const body = document.body;
+
+        // HAYIR butonuna tıklanınca çalışacak fonksiyon
+        function handleNoClick() {
+            // 1. HAYIR metnini değiştir
+            const messageIndex = noClickCount % noMessages.length;
+            noButton.textContent = noMessages[messageIndex];
+            noClickCount++;
+
+            // 2. EVET butonunun boyutunu büyüt
+            // Her tıklamada boyut %30 artar
+            const currentWidth = yesButton.offsetWidth;
+            const currentHeight = yesButton.offsetHeight;
+            const currentFontSize = parseFloat(window.getComputedStyle(yesButton).fontSize);
+
+            const scaleFactor = 1.3; // %30 artış
+            const newWidth = currentWidth * scaleFactor; 
+            const newHeight = currentHeight * scaleFactor; 
+            const newFontSize = currentFontSize + 4; // Font boyutunu artır
+
+            yesButton.style.width = `${newWidth}px`;
+            yesButton.style.height = `${newHeight}px`;
+            yesButton.style.fontSize = `${newFontSize}px`;
+            
+            // Eğer "Evet" butonu çok büyürse, metnini de değiştir
+            if (newWidth > 300) { 
+                yesButton.textContent = "EVET! Hemen Tıkla! (Tek Seçenek Bu)";
+            } else if (newWidth > 150) {
+                yesButton.textContent = "EVET! (Büyüyorum...)";
+            }
+
+            // 3. HAYIR butonunu rastgele bir yere taşı
+            // Sayfa boyutları içinde kalacak rastgele koordinatlar hesapla
+            const padding = 50; 
+            const maxRight = window.innerWidth - noButton.offsetWidth - padding;
+            const maxBottom = window.innerHeight - noButton.offsetHeight - padding;
+
+            const newX = Math.random() * (maxRight - padding) + padding;
+            const newY = Math.random() * (maxBottom - padding) + padding;
+            
+            // Konumlandırma stilini uygula
+            noButton.style.position = 'absolute';
+            noButton.style.left = `${newX}px`;
+            noButton.style.top = `${newY}px`;
+        }
+
+        // EVET butonuna tıklanınca çalışacak fonksiyon
+        function handleYesClick() {
+            // 1. Başarılı renk ve mesajı göster
+            body.style.backgroundColor = '#a8e6cf'; // Açık yeşil/turkuaz
+
+            // 2. Konteyneri gizle
+            container.style.display = 'none';
+
+            // 3. Yeni bir "Sonsuza Dek Evet" mesajı oluştur
+            const successMessage = document.createElement('h1');
+            successMessage.textContent = "EVET! Seni seviyorum! ❤️ Barıştık! 🎉";
+            successMessage.style.fontSize = '4em';
+            successMessage.style.color = '#2c3e50';
+            successMessage.classList.add('success-message'); 
+
+            // 4. Yeni mesajı ekrana yerleştir
+            body.appendChild(successMessage);
+            body.style.display = 'flex';
+            body.style.justifyContent = 'center';
+            body.style.alignItems = 'center';
+        }
+    </script>
+</body>
+</html>
